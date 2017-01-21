@@ -118,6 +118,7 @@
     if (isXhr2) {
       try {
         xhr.responseType = requestType;
+        xhr.withCredentials = true;
       }
       catch (e) {
         // Some browsers like Safari 6 do handle XHR2 but not the json
