@@ -65,18 +65,16 @@ define([
       var view = self.views[i];
       var PointMarker = self.peaks.options.pointMarker;
 
-      if (point.editable) {
-        pointGroup.marker = new PointMarker(
-          true,
-          pointGroup,
-          point,
-          self.pointHandleDrag.bind(self),
-          self.peaks.options.pointDblClickHandler,
-          self.peaks.options.pointDragEndHandler
-        );
+      pointGroup.marker = new PointMarker(
+        point.editable,
+        pointGroup,
+        point,
+        self.pointHandleDrag.bind(self),
+        self.peaks.options.pointDblClickHandler,
+        self.peaks.options.pointDragEndHandler
+      );
 
-        pointGroup.add(pointGroup.marker);
-      }
+      pointGroup.add(pointGroup.marker);
 
       view.pointLayer.add(pointGroup);
     });
@@ -105,16 +103,14 @@ define([
     var overviewTimestampOffset =
       this.peaks.waveform.waveformOverview.data.at_time(point.timestamp);
 
-    if (point.editable) {
-      if (point.overview.marker) {
-        point.overview.marker.show().setX(
-          overviewTimestampOffset - point.overview.marker.getWidth()
-        );
-      }
-
-      // Change Text
-      point.overview.marker.label.setText(Utils.niceTime(point.timestamp, false));
+    if (point.overview.marker) {
+      point.overview.marker.show().setX(
+        overviewTimestampOffset - point.overview.marker.getWidth()
+      );
     }
+
+    // Change Text
+    point.overview.marker.label.setText(Utils.niceTime(point.timestamp, false));
 
     // Zoom
     var zoomTimestampOffset = this.peaks.waveform.waveformZoomView.data.at_time(point.timestamp);
@@ -129,14 +125,14 @@ define([
 
       point.zoom.show();
 
-      if (point.editable) {
-        if (point.zoom.marker) {
-          point.zoom.marker.show().setX(startPixel - point.zoom.marker.getWidth());
-        }
-
-        // Change Text
-        point.zoom.marker.label.setText(Utils.niceTime(point.timestamp, false));
+      if (point.zoom.marker) {
+        point.zoom.marker.show().setX(startPixel - point.zoom.marker.getWidth());
       }
+
+      // Change Text
+      point.zoom.marker.label.setText(
+        Utils.niceTime(point.timestamp, false) + '\n' + point.labelText
+      );
     }
     else {
       point.zoom.hide();

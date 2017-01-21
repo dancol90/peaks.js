@@ -141,7 +141,7 @@ define(['konva'], function(Konva) {
      * @return {Konva.Group} Konva group object of handle marker elements
      */
     return function createPointHandle(draggable, point, parent, onDrag, onDblClick, onDragEnd) {
-      var handleTop = (height / 2) - 10.5;
+      var handleTop = draggable ? (height / 2) - 10.5 : 0;
       var handleWidth = 10;
       var handleHeight = 20;
       var handleX = 0.5; // Place in the middle of the marker
@@ -175,13 +175,13 @@ define(['konva'], function(Konva) {
       }
 
       // Place text to the left of the mark
-      var xPosition = -handleWidth;
+      var xPosition = handleWidth + 2;
 
       var text = new Konva.Text({
         x:          xPosition,
-        y:          (height / 2) - 5,
+        y:          draggable ? (height / 2) - 5 : 0.5,
         text:       '',
-        textAlign:  'center',
+        textAlign:  'left',
         fontSize:   10,
         fontFamily: 'sans-serif',
         fill:       '#000'
@@ -212,7 +212,7 @@ define(['konva'], function(Konva) {
 
       handle.on('mouseover', function(event) {
         text.show();
-        text.setX(xPosition - text.getWidth()); // Position text to the left of the mark
+        text.setX(xPosition); // Position text to the left of the mark
         point.view.pointLayer.draw();
       });
 
