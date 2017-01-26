@@ -78,44 +78,42 @@ define([
       var SegmentMarkerIn = self.peaks.options.segmentInMarker;
       var SegmentMarkerOut = self.peaks.options.segmentOutMarker;
 
-      segmentGroup.waveformShape = SegmentShape.createShape(segment, view);
+      if (i === 0) {
+        segmentGroup.waveformShape = SegmentShape.createShape(segment, view);
 
-      segmentGroup.waveformShape.on('mouseenter', function onMouseEnter(event) {
-        event.target.parent.label.show();
-        event.target.parent.view.segmentLayer.draw();
-      });
+        segmentGroup.waveformShape.on('mouseenter', function onMouseEnter(event) {
+          event.target.parent.label.show();
+          event.target.parent.view.segmentLayer.draw();
+        });
 
-      segmentGroup.waveformShape.on('mouseleave', function onMouseLeave(event) {
-        event.target.parent.label.hide();
-        event.target.parent.view.segmentLayer.draw();
-      });
+        segmentGroup.waveformShape.on('mouseleave', function onMouseLeave(event) {
+          event.target.parent.label.hide();
+          event.target.parent.view.segmentLayer.draw();
+        });
 
-      segmentGroup.add(segmentGroup.waveformShape);
+        segmentGroup.add(segmentGroup.waveformShape);
+      }
 
       segmentGroup.label = new SegmentLabel(segmentGroup, segment);
       segmentGroup.add(segmentGroup.label.hide());
 
-      if (segment.editable) {
-        var draggable = true;
+      segmentGroup.inMarker = new SegmentMarkerIn(
+        segment.editable,
+        segmentGroup,
+        segment,
+        self.segmentHandleDrag.bind(self)
+      );
 
-        segmentGroup.inMarker = new SegmentMarkerIn(
-          draggable,
-          segmentGroup,
-          segment,
-          self.segmentHandleDrag.bind(self)
-        );
+      segmentGroup.add(segmentGroup.inMarker);
 
-        segmentGroup.add(segmentGroup.inMarker);
+      segmentGroup.outMarker = new SegmentMarkerOut(
+        segment.editable,
+        segmentGroup,
+        segment,
+        self.segmentHandleDrag.bind(self)
+      );
 
-        segmentGroup.outMarker = new SegmentMarkerOut(
-          draggable,
-          segmentGroup,
-          segment,
-          self.segmentHandleDrag.bind(self)
-        );
-
-        segmentGroup.add(segmentGroup.outMarker);
-      }
+      segmentGroup.add(segmentGroup.outMarker);
 
       view.segmentLayer.add(segmentGroup);
     });
@@ -132,7 +130,7 @@ define([
     var waveformOverview = this.peaks.waveform.waveformOverview;
     var waveformZoomView = this.peaks.waveform.waveformZoomView;
     var inMarker = segment.overview.inMarker;
-    var outMarker = segment.overview.inMarker;
+    var outMarker = segment.overview.outMarker;
 
     // Binding with data
     waveformOverview.data.set_segment(
@@ -153,24 +151,22 @@ define([
 
     segment.overview.setWidth(overviewEndOffset - overviewStartOffset);
 
-    if (segment.editable) {
-      if (inMarker) {
-        inMarker.show().setX(overviewStartOffset - inMarker.getWidth());
-      }
-
-      if (outMarker) {
-        outMarker.show().setX(overviewEndOffset);
-      }
-
-      // Change Text
-      inMarker.label.setText(Utils.niceTime(segment.startTime, false));
-      outMarker.label.setText(Utils.niceTime(segment.endTime, false));
+    if (inMarker) {
+      inMarker.show().setX(overviewStartOffset - inMarker.getWidth());
     }
+
+    if (outMarker) {
+      outMarker.show().setX(overviewEndOffset);
+    }
+
+    // Change Text
+    inMarker.label.setText(Utils.niceTime(segment.startTime, false));
+    outMarker.label.setText(Utils.niceTime(segment.endTime, false));
 
     // Label
     // segment.overview.label.setX(overviewStartOffset);
 
-    SegmentShape.update.call(segment.overview.waveformShape, waveformOverview, segment.id);
+    // SegmentShape.update.call(segment.overview.waveformShape, waveformOverview, segment.id);
 
     // Zoom
     var zoomStartOffset = waveformZoomView.data.at_time(segment.startTime);
@@ -193,19 +189,17 @@ define([
 
       segment.zoom.show();
 
-      if (segment.editable) {
-        if (segment.zoom.inMarker) {
-          segment.zoom.inMarker.show().setX(startPixel - segment.zoom.inMarker.getWidth());
-        }
-
-        if (segment.zoom.outMarker) {
-          segment.zoom.outMarker.show().setX(endPixel);
-        }
-
-        // Change Text
-        segment.zoom.inMarker.label.setText(Utils.niceTime(segment.startTime, false));
-        segment.zoom.outMarker.label.setText(Utils.niceTime(segment.endTime, false));
+      if (segment.zoom.inMarker) {
+        segment.zoom.inMarker.show().setX(startPixel - segment.zoom.inMarker.getWidth());
       }
+
+      if (segment.zoom.outMarker) {
+        segment.zoom.outMarker.show().setX(endPixel);
+      }
+
+      // Change Text
+      segment.zoom.inMarker.label.setText(Utils.niceTime(segment.startTime, false));
+      segment.zoom.outMarker.label.setText(Utils.niceTime(segment.endTime, false));
 
       SegmentShape.update.call(
         segment.zoom.waveformShape,
@@ -245,7 +239,7 @@ define([
 
   WaveformSegments.prototype.getSegmentColor = function() {
     if (this.peaks.options.randomizeSegmentColor) {
-      return 'rgba(' + g() + ', ' + g() + ', ' + g() + ', 1)';
+      return 'rgba(' + g() + ', ' + g() + ', ' + g() + ', 0.5)';
     }
     else {
       return this.peaks.options.segmentColor;

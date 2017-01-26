@@ -29,7 +29,7 @@ define(['konva'], function(Konva) {
      */
     return function createSegmentHandle(draggable, segment, parent, onDrag) {
       var handleHeight = 20;
-      var handleWidth = handleHeight / 2;
+      var handleWidth = handleHeight / (draggable ? 2 : 4);
       var handleY = (height / 2) - 10.5;
       var handleX = inMarker ? -handleWidth + 0.5 : 0.5;
 
