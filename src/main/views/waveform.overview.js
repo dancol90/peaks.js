@@ -142,7 +142,7 @@ define([
       x: 0,
       y: 11,
       width: 0,
-      stroke: this.options.overviewHighlightRectangleColor,
+      stroke: this.options.overviewHighlightRectangleBorder,
       strokeWidth: 1,
       height: this.height - (11 * 2),
       fill: this.options.overviewHighlightRectangleColor,

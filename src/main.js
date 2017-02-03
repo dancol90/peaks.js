@@ -135,6 +135,7 @@ define('peaks', [
        * you what you see in the zoom view.
        */
       overviewHighlightRectangleColor: 'grey',
+      overviewHighlightRectangleBorder: 'grey',
 
       /**
        * Random colour per segment (overrides segmentColor)
