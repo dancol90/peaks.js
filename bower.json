@@ -1,6 +1,6 @@
 {
   "name": "peaks.js",
-  "main": "src/main.js",
+  "main": "peaks.js",
   "ignore": [
     ".eslintrc",
     "**/*.txt",
@@ -10,8 +10,5 @@
     "test",
     "test_data"
   ],
-  "dependencies": {
-    "requirejs": "~2.1.14"
-  },
   "devDependencies": {}
 }
