@@ -78,21 +78,19 @@ define([
       var SegmentMarkerIn = self.peaks.options.segmentInMarker;
       var SegmentMarkerOut = self.peaks.options.segmentOutMarker;
 
-      if (i === 0) {
-        segmentGroup.waveformShape = SegmentShape.createShape(segment, view);
+      segmentGroup.waveformShape = SegmentShape.createShape(segment, view);
 
-        segmentGroup.waveformShape.on('mouseenter', function onMouseEnter(event) {
-          event.target.parent.label.show();
-          event.target.parent.view.segmentLayer.draw();
-        });
+      segmentGroup.waveformShape.on('mouseenter', function onMouseEnter(event) {
+        event.target.parent.label.show();
+        event.target.parent.view.segmentLayer.draw();
+      });
 
-        segmentGroup.waveformShape.on('mouseleave', function onMouseLeave(event) {
-          event.target.parent.label.hide();
-          event.target.parent.view.segmentLayer.draw();
-        });
+      segmentGroup.waveformShape.on('mouseleave', function onMouseLeave(event) {
+        event.target.parent.label.hide();
+        event.target.parent.view.segmentLayer.draw();
+      });
 
-        segmentGroup.add(segmentGroup.waveformShape);
-      }
+      segmentGroup.add(segmentGroup.waveformShape);
 
       segmentGroup.label = new SegmentLabel(segmentGroup, segment);
       segmentGroup.add(segmentGroup.label.hide());
@@ -166,7 +164,7 @@ define([
     // Label
     // segment.overview.label.setX(overviewStartOffset);
 
-    // SegmentShape.update.call(segment.overview.waveformShape, waveformOverview, segment.id);
+    SegmentShape.update.call(segment.overview.waveformShape, waveformOverview, segment.id);
 
     // Zoom
     var zoomStartOffset = waveformZoomView.data.at_time(segment.startTime);

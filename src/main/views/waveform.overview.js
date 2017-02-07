@@ -146,7 +146,7 @@ define([
       strokeWidth: 1,
       height: this.height - (11 * 2),
       fill: this.options.overviewHighlightRectangleColor,
-      opacity: 0.3,
+      opacity: 1,
       cornerRadius: 2
     });
 

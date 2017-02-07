@@ -19023,18 +19023,16 @@ module.exports = function (Konva, Utils, SegmentShape) {
             var SegmentLabel = self.peaks.options.segmentLabelDraw;
             var SegmentMarkerIn = self.peaks.options.segmentInMarker;
             var SegmentMarkerOut = self.peaks.options.segmentOutMarker;
-            if (i === 0) {
-                segmentGroup.waveformShape = SegmentShape.createShape(segment, view);
-                segmentGroup.waveformShape.on('mouseenter', function onMouseEnter(event) {
-                    event.target.parent.label.show();
-                    event.target.parent.view.segmentLayer.draw();
-                });
-                segmentGroup.waveformShape.on('mouseleave', function onMouseLeave(event) {
-                    event.target.parent.label.hide();
-                    event.target.parent.view.segmentLayer.draw();
-                });
-                segmentGroup.add(segmentGroup.waveformShape);
-            }
+            segmentGroup.waveformShape = SegmentShape.createShape(segment, view);
+            segmentGroup.waveformShape.on('mouseenter', function onMouseEnter(event) {
+                event.target.parent.label.show();
+                event.target.parent.view.segmentLayer.draw();
+            });
+            segmentGroup.waveformShape.on('mouseleave', function onMouseLeave(event) {
+                event.target.parent.label.hide();
+                event.target.parent.view.segmentLayer.draw();
+            });
+            segmentGroup.add(segmentGroup.waveformShape);
             segmentGroup.label = new SegmentLabel(segmentGroup, segment);
             segmentGroup.add(segmentGroup.label.hide());
             segmentGroup.inMarker = new SegmentMarkerIn(segment.editable, segmentGroup, segment, self.segmentHandleDrag.bind(self));
@@ -19067,6 +19065,7 @@ module.exports = function (Konva, Utils, SegmentShape) {
         }
         inMarker.label.setText(Utils.niceTime(segment.startTime, false));
         outMarker.label.setText(Utils.niceTime(segment.endTime, false));
+        SegmentShape.update.call(segment.overview.waveformShape, waveformOverview, segment.id);
         var zoomStartOffset = waveformZoomView.data.at_time(segment.startTime);
         var zoomEndOffset = waveformZoomView.data.at_time(segment.endTime);
         var frameStartOffset = waveformZoomView.frameOffset;
@@ -19503,7 +19502,7 @@ module.exports = function (WaveformAxis, mixins, MouseDragHandler, Konva) {
             strokeWidth: 1,
             height: this.height - 11 * 2,
             fill: this.options.overviewHighlightRectangleColor,
-            opacity: 0.3,
+            opacity: 1,
             cornerRadius: 2
         });
         this.refLayer.add(this.highlightRect);
